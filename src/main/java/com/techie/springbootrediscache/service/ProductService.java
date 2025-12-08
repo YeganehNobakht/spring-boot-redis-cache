@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
+    public static final String PRODUCT_CACHE = "products";
     private final ProductRepository productRepository;
 //    private final CacheManager cacheManager;
 
@@ -20,7 +21,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    @CachePut(value = "PRODUCT_CACHE", key = "#result.id()")
+    @CachePut(value = PRODUCT_CACHE, key = "#result.id()")
     public ProductDto createProduct(ProductDto productDto) {
         var product = new Product();
         product.setName(productDto.name());
@@ -36,7 +37,7 @@ public class ProductService {
                 savedProduct.getPrice());
     }
 
-    @Cacheable(value = "PRODUCT_CACHE", key = "#productId")
+    @Cacheable(value = PRODUCT_CACHE, key = "#productId")
     public ProductDto getProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Cannot find product with id " + productId));
@@ -44,7 +45,7 @@ public class ProductService {
                 product.getPrice());
     }
 
-    @CachePut(value = "PRODUCT_CACHE", key = "#result.id()")
+    @CachePut(value = PRODUCT_CACHE, key = "#result.id()")
     public ProductDto updateProduct(ProductDto productDto) {
         Long productId = productDto.id();
         Product product = productRepository.findById(productId)
@@ -58,7 +59,7 @@ public class ProductService {
                 updatedProduct.getPrice());
     }
 
-    @CacheEvict(value = "PRODUCT_CACHE", key = "#productId")
+    @CacheEvict(value = PRODUCT_CACHE, key = "#productId")
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
     }
